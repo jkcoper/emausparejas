@@ -486,7 +486,6 @@ body {
    Book Styling
    ======================================== */
 .book-wrapper {
-    perspective: 2000px;
     width: 100%;
     max-width: 700px;
     background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--cream) 100%);
@@ -506,8 +505,7 @@ body {
     box-shadow:
         5px 5px 20px rgba(0, 0, 0, 0.2),
         inset 0 0 30px rgba(0, 0, 0, 0.05);
-    transform-style: preserve-3d;
-    z-index: 1;
+    overflow: hidden;
 }
 
 /* Page Styling */
@@ -527,7 +525,28 @@ body {
     border-radius: 5px 15px 15px 5px;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02);
     overflow: hidden;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
     z-index: 1;
+}
+
+.page.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.page.slide-left {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.page.slide-right {
+    opacity: 0;
+    transform: translateX(100%);
 }
 
 .page::before {
@@ -650,15 +669,6 @@ body {
     color: var(--gold);
     text-align: center;
     line-height: 1.8;
-}
-
-/* Turn.js Overrides - Fix Transparency */
-.turn-page {
-    background: var(--page-bg) !important;
-}
-
-.turn-page-wrapper {
-    background: var(--page-bg) !important;
 }
 
 /* ========================================

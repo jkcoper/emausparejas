@@ -1,14 +1,14 @@
 /**
  * Emaús Parejas Ibagué - Intenciones de Oración
- * Main Application Logic
+ * Main Application Logic - Sin Turn.js
  */
 
 // ========================================
 // Global Variables
 // ========================================
 let intentions = [];
-let bookInitialized = false;
 let currentPageIndex = 0;
+let pages = [];
 
 // ========================================
 // DOM Elements
@@ -117,72 +117,46 @@ function initEventListeners() {
 // Book Operations
 // ========================================
 function openBook() {
-    // Animate cover out
-    gsap.to(elements.coverSection, {
-        opacity: 0,
-        y: -50,
-        duration: 0.5,
-        onComplete: () => {
-            elements.coverSection.style.display = 'none';
-            elements.coverSection.style.opacity = '';
-            elements.coverSection.style.transform = '';
-
-            elements.notebookSection.classList.add('active');
-
-            // Animate notebook in
-            gsap.fromTo(elements.notebookSection,
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    clearProps: 'all',
-                    onComplete: () => {
-                        if (!bookInitialized) {
-                            initBook();
-                        }
-                    }
-                }
-            );
-        }
-    });
-}
-
-function initBook() {
+    elements.coverSection.style.display = 'none';
+    elements.notebookSection.classList.add('active');
     buildPages();
-    initializeTurnJs();
-    bookInitialized = true;
-    updatePageCounter();
+    showPage(0);
 }
 
 function buildPages() {
     elements.book.innerHTML = '';
+    pages = [];
 
     // Cover Page
     const coverPage = createCoverPage();
     elements.book.appendChild(coverPage);
+    pages.push(coverPage);
 
     // Intention Pages
     intentions.forEach((intention, index) => {
         const page = createIntentionPage(intention, index);
         elements.book.appendChild(page);
+        pages.push(page);
     });
 
     // Empty Page (for new intentions)
     const emptyPage = createEmptyPage();
     elements.book.appendChild(emptyPage);
+    pages.push(emptyPage);
 
     // Back Cover
     const backCover = createBackCoverPage();
     elements.book.appendChild(backCover);
+    pages.push(backCover);
 
     updatePageCounter();
     updateSearchSelect();
+    updateNavButtons();
 }
 
 function createCoverPage() {
     const page = document.createElement('div');
-    page.className = 'page cover-page';
+    page.className = 'page cover-page visible';
     page.innerHTML = `
         <div class="page-decoration top-right"><i class="fas fa-cross"></i></div>
         <div class="page-decoration bottom-left"><i class="fas fa-cross"></i></div>
@@ -244,71 +218,52 @@ function createBackCoverPage() {
     return page;
 }
 
-function initializeTurnJs() {
-    if (bookInitialized) {
-        try {
-            $(elements.book).turn('destroy');
-        } catch (e) {
-            // Ignore if not initialized
-        }
-    }
+// ========================================
+// Page Navigation (Simple & Reliable)
+// ========================================
+function showPage(index) {
+    if (index < 0 || index >= pages.length) return;
 
-    $(elements.book).turn({
-        width: elements.book.offsetWidth,
-        height: elements.book.offsetHeight,
-        autoCenter: true,
-        display: 'single',
-        acceleration: false,
-        gradients: false,
-        elevation: 0,
-        when: {
-            turned: function(event, page) {
-                currentPageIndex = page - 1;
-                updatePageCounter();
-            },
-            turning: function(event, page) {
-                // Limit page range
-                const totalPages = $(elements.book).turn('pages');
-                if (page < 1 || page > totalPages) {
-                    event.preventDefault();
-                }
-            }
+    pages.forEach((page, i) => {
+        page.classList.remove('visible', 'slide-left', 'slide-right');
+        if (i === index) {
+            page.classList.add('visible');
+        } else if (i < index) {
+            page.classList.add('slide-left');
+        } else {
+            page.classList.add('slide-right');
         }
     });
 
-    // Start at page 1
-    $(elements.book).turn('page', 1);
+    currentPageIndex = index;
+    updatePageCounter();
+    updateNavButtons();
 }
 
 function navigatePage(direction) {
-    if (!bookInitialized) return;
-
-    const currentPage = $(elements.book).turn('page');
-    const totalPages = $(elements.book).turn('pages');
-    const newPage = currentPage + direction;
-
-    if (newPage >= 1 && newPage <= totalPages) {
-        $(elements.book).turn('page', newPage);
+    const newIndex = currentPageIndex + direction;
+    if (newIndex >= 0 && newIndex < pages.length) {
+        showPage(newIndex);
     }
 }
 
 function goToPage(pageNumber) {
-    if (!bookInitialized) return;
-
-    const totalPages = $(elements.book).turn('pages');
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-        $(elements.book).turn('page', pageNumber);
+    if (pageNumber >= 0 && pageNumber < pages.length) {
+        showPage(pageNumber);
     }
 }
 
 function updatePageCounter() {
-    if (!bookInitialized) return;
+    elements.currentPage.textContent = currentPageIndex + 1;
+    elements.totalPages.textContent = pages.length;
+}
 
-    const currentPage = $(elements.book).turn('page');
-    const totalPages = $(elements.book).turn('pages');
+function updateNavButtons() {
+    elements.prevPageBtn.style.opacity = currentPageIndex === 0 ? '0.5' : '1';
+    elements.prevPageBtn.style.pointerEvents = currentPageIndex === 0 ? 'none' : 'auto';
 
-    elements.currentPage.textContent = currentPage;
-    elements.totalPages.textContent = totalPages;
+    elements.nextPageBtn.style.opacity = currentPageIndex === pages.length - 1 ? '0.5' : '1';
+    elements.nextPageBtn.style.pointerEvents = currentPageIndex === pages.length - 1 ? 'none' : 'auto';
 }
 
 // ========================================
@@ -319,7 +274,7 @@ function updateSearchSelect() {
 
     const uniqueAuthors = [...new Set(intentions.map(i => i.nombre))];
 
-    uniqueAuthors.forEach((author, index) => {
+    uniqueAuthors.forEach((author) => {
         const option = document.createElement('option');
         option.value = author.toLowerCase();
         option.textContent = author;
@@ -331,30 +286,25 @@ function searchByAuthor() {
     const searchTerm = elements.searchSelect.value.toLowerCase();
     if (!searchTerm) return;
 
-    // Find the first page with this author
-    const pages = elements.book.querySelectorAll('.page[data-author]');
-    let found = false;
+    let foundIndex = -1;
 
     pages.forEach((page, index) => {
-        if (page.getAttribute('data-author') === searchTerm && !found) {
-            // Calculate page number (cover page is 1, so +2)
-            const pageNumber = index + 2;
-            goToPage(pageNumber);
-            found = true;
-
-            // Animate the page
-            gsap.fromTo(page, {
-                boxShadow: '0 0 0 0 rgba(212, 168, 67, 0)'
-            }, {
-                boxShadow: '0 0 30px 10px rgba(212, 168, 67, 0.5)',
-                duration: 0.5,
-                yoyo: true,
-                repeat: 2
-            });
+        const author = page.getAttribute('data-author');
+        if (author === searchTerm && foundIndex === -1) {
+            foundIndex = index;
         }
     });
 
-    if (!found) {
+    if (foundIndex !== -1) {
+        showPage(foundIndex);
+
+        // Highlight effect
+        const page = pages[foundIndex];
+        page.style.boxShadow = '0 0 30px 10px rgba(212, 168, 67, 0.7)';
+        setTimeout(() => {
+            page.style.boxShadow = '';
+        }, 2000);
+    } else {
         showToast('No se encontró intención de ese autor', 'error');
     }
 }
@@ -365,9 +315,6 @@ function searchByAuthor() {
 function openModal() {
     elements.intentionModal.classList.add('active');
     elements.intentionInput.focus();
-    updateFormDate();
-
-    // Reset form
     elements.intentionForm.reset();
     updateFormDate();
 }
@@ -438,9 +385,8 @@ async function handleFormSubmit(e) {
         buildPages();
 
         // Navigate to the new page
-        const newPageIndex = intentions.length; // +1 for cover
         setTimeout(() => {
-            goToPage(newPageIndex);
+            goToPage(intentions.length); // +1 for cover
         }, 300);
 
         showToast('¡Intención guardada con éxito!', 'success');
@@ -484,30 +430,8 @@ async function loadIntentions() {
 // Back to Cover
 // ========================================
 function backToCover() {
-    // Animate notebook out
-    gsap.to(elements.notebookSection, {
-        opacity: 0,
-        y: 50,
-        duration: 0.5,
-        onComplete: () => {
-            elements.notebookSection.classList.remove('active');
-            elements.notebookSection.style.opacity = '';
-            elements.notebookSection.style.transform = '';
-
-            elements.coverSection.style.display = 'flex';
-
-            // Animate cover in
-            gsap.fromTo(elements.coverSection,
-                { opacity: 0, y: -50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.5,
-                    clearProps: 'all'
-                }
-            );
-        }
-    });
+    elements.notebookSection.classList.remove('active');
+    elements.coverSection.style.display = 'flex';
 }
 
 // ========================================
@@ -538,19 +462,3 @@ function showToast(message, type = 'success') {
         }, 300);
     }, 3000);
 }
-
-// ========================================
-// Window Resize Handler
-// ========================================
-window.addEventListener('resize', () => {
-    if (bookInitialized) {
-        try {
-            $(elements.book).turn('size',
-                elements.book.offsetWidth,
-                elements.book.offsetHeight
-            );
-        } catch (e) {
-            // Ignore resize errors
-        }
-    }
-});
