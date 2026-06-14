@@ -292,6 +292,19 @@ body {
     max-width: 400px;
 }
 
+.cover-hint {
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: var(--space-md);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
 /* Open Book Button */
 .open-book-btn {
     position: relative;
@@ -346,54 +359,7 @@ body {
     100% { left: 100%; }
 }
 
-/* Scroll Indicator */
-.scroll-indicator {
-    position: absolute;
-    bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-sm);
-    animation: bounce 2s infinite;
-}
-
-.scroll-indicator p {
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    color: var(--text-light);
-    letter-spacing: 1px;
-}
-
-.scroll-mouse {
-    width: 26px;
-    height: 40px;
-    border: 2px solid var(--navy-light);
-    border-radius: 13px;
-    position: relative;
-}
-
-.scroll-wheel {
-    width: 4px;
-    height: 8px;
-    background: var(--navy-light);
-    border-radius: 2px;
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: scrollWheel 1.5s infinite;
-}
-
-@keyframes scrollWheel {
-    0% { opacity: 1; top: 8px; }
-    100% { opacity: 0; top: 20px; }
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
-}
+/* Scroll Indicator - Removed, replaced with cover-hint */
 
 /* ========================================
    Notebook Section
@@ -435,6 +401,10 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .control-btn {
@@ -474,10 +444,16 @@ body {
     font-size: 1rem;
     color: var(--navy);
     font-weight: 500;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--purple-pastel);
     padding: var(--space-sm) var(--space-lg);
     border-radius: 20px;
-    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.page-counter i {
+    color: var(--gold);
 }
 
 .nav-buttons {
@@ -495,6 +471,17 @@ body {
     border-radius: 50%;
 }
 
+/* Navigation Hint */
+.navigation-hint {
+    text-align: center;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--text-light);
+    background: rgba(255, 255, 255, 0.7);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: 20px;
+}
+
 /* ========================================
    Book Styling
    ======================================== */
@@ -502,6 +489,10 @@ body {
     perspective: 2000px;
     width: 100%;
     max-width: 700px;
+    background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--cream) 100%);
+    padding: var(--space-xl);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
 .book {
@@ -677,7 +668,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
-    backdrop-filter: blur(10px);
+    border: 2px solid var(--purple-pastel);
 }
 
 .search-icon {
