@@ -124,19 +124,26 @@ function openBook() {
         duration: 0.5,
         onComplete: () => {
             elements.coverSection.style.display = 'none';
+            elements.coverSection.style.opacity = '';
+            elements.coverSection.style.transform = '';
+
             elements.notebookSection.classList.add('active');
 
             // Animate notebook in
-            gsap.from(elements.notebookSection, {
-                opacity: 0,
-                y: 50,
-                duration: 0.5,
-                onComplete: () => {
-                    if (!bookInitialized) {
-                        initBook();
+            gsap.fromTo(elements.notebookSection,
+                { opacity: 0, y: 50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    clearProps: 'all',
+                    onComplete: () => {
+                        if (!bookInitialized) {
+                            initBook();
+                        }
                     }
                 }
-            });
+            );
         }
     });
 }
@@ -484,14 +491,21 @@ function backToCover() {
         duration: 0.5,
         onComplete: () => {
             elements.notebookSection.classList.remove('active');
+            elements.notebookSection.style.opacity = '';
+            elements.notebookSection.style.transform = '';
+
             elements.coverSection.style.display = 'flex';
 
             // Animate cover in
-            gsap.from(elements.coverSection, {
-                opacity: 0,
-                y: -50,
-                duration: 0.5
-            });
+            gsap.fromTo(elements.coverSection,
+                { opacity: 0, y: -50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    clearProps: 'all'
+                }
+            );
         }
     });
 }
