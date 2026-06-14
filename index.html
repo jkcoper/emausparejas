@@ -28,8 +28,8 @@
     <!-- Floating Particles Background -->
     <div class="particles-container" id="particles"></div>
 
-    <!-- ========== LOGIN SCREEN ========== -->
-    <section class="login-section" id="loginSection">
+    <!-- ========== LOGIN MODAL ========== -->
+    <div class="login-overlay" id="loginOverlay">
         <div class="login-card">
             <div class="login-icon">
                 <i class="fas fa-lock"></i>
@@ -44,14 +44,19 @@
                     autocomplete="off"
                     required
                 >
-                <button type="submit" class="login-btn">
-                    <span>Entrar</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
+                <div class="login-buttons">
+                    <button type="submit" class="login-btn">
+                        <span>Entrar</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="login-cancel-btn" id="loginCancelBtn">
+                        <span>Cancelar</span>
+                    </button>
+                </div>
             </form>
             <p class="login-hint" id="loginError"></p>
         </div>
-    </section>
+    </div>
 
     <!-- ========== COVER SECTION ========== -->
     <section class="cover-section" id="coverSection">
@@ -142,10 +147,16 @@
             </div>
 
             <!-- Back to Cover -->
-            <button class="back-to-cover-btn" id="backToCoverBtn">
-                <i class="fas fa-book"></i>
-                <span>Volver a Portada</span>
-            </button>
+            <div class="bottom-buttons">
+                <button class="back-to-cover-btn" id="backToCoverBtn">
+                    <i class="fas fa-book"></i>
+                    <span>Volver a Portada</span>
+                </button>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Salir</span>
+                </button>
+            </div>
         </div>
     </section>
 

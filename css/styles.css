@@ -115,18 +115,23 @@ body {
 }
 
 /* ========================================
-   Login Section
+   Login Modal
    ======================================== */
-.login-section {
-    min-height: 100vh;
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--cream) 50%, var(--blue-soft) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 9999;
     padding: var(--space-xl);
-    background: linear-gradient(135deg, var(--purple-pastel) 0%, var(--cream) 50%, var(--blue-soft) 100%);
 }
 
-.login-section.hidden {
+.login-overlay.hidden {
     display: none;
 }
 
@@ -193,12 +198,17 @@ body {
     box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.2);
 }
 
+.login-buttons {
+    display: flex;
+    gap: var(--space-md);
+}
+
 .login-btn {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-sm);
-    width: 100%;
     padding: var(--space-md);
     background: linear-gradient(135deg, var(--gold-dark), var(--gold));
     color: white;
@@ -215,6 +225,27 @@ body {
 .login-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+}
+
+.login-cancel-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    background: transparent;
+    color: var(--text-medium);
+    border: 2px solid var(--purple-pastel);
+    border-radius: 12px;
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+}
+
+.login-cancel-btn:hover {
+    background: var(--purple-pastel);
+    color: var(--navy);
 }
 
 .login-hint {
@@ -846,6 +877,13 @@ body {
 }
 
 /* Back to Cover Button */
+.bottom-buttons {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .back-to-cover-btn {
     display: flex;
     align-items: center;
@@ -863,6 +901,26 @@ body {
 
 .back-to-cover-btn:hover {
     background: var(--navy);
+    color: white;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    color: var(--red);
+    border: 2px solid var(--red);
+    border-radius: 25px;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-medium);
+}
+
+.logout-btn:hover {
+    background: var(--red);
     color: white;
 }
 

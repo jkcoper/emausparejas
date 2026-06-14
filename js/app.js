@@ -20,10 +20,11 @@ let pages = [];
 // ========================================
 const elements = {
     // Login
-    loginSection: document.getElementById('loginSection'),
+    loginOverlay: document.getElementById('loginOverlay'),
     loginForm: document.getElementById('loginForm'),
     accessCode: document.getElementById('accessCode'),
     loginError: document.getElementById('loginError'),
+    loginCancelBtn: document.getElementById('loginCancelBtn'),
 
     // Cover
     coverSection: document.getElementById('coverSection'),
@@ -40,6 +41,7 @@ const elements = {
     searchSelect: document.getElementById('searchSelect'),
     searchGoBtn: document.getElementById('searchGoBtn'),
     backToCoverBtn: document.getElementById('backToCoverBtn'),
+    logoutBtn: document.getElementById('logoutBtn'),
 
     // Modal
     intentionModal: document.getElementById('intentionModal'),
@@ -76,7 +78,7 @@ function checkAccess() {
 }
 
 function showMainContent() {
-    elements.loginSection.classList.add('hidden');
+    elements.loginOverlay.classList.add('hidden');
     elements.coverSection.style.display = 'flex';
 }
 
@@ -94,12 +96,26 @@ function handleLogin(e) {
         elements.accessCode.focus();
 
         // Shake animation
-        elements.loginCard = document.querySelector('.login-card');
-        elements.loginCard.style.animation = 'shake 0.5s ease';
+        const loginCard = document.querySelector('.login-card');
+        loginCard.style.animation = 'shake 0.5s ease';
         setTimeout(() => {
-            elements.loginCard.style.animation = '';
+            loginCard.style.animation = '';
         }, 500);
     }
+}
+
+function handleCancelLogin() {
+    elements.accessCode.value = '';
+    elements.loginError.textContent = '';
+}
+
+function handleLogout() {
+    sessionStorage.removeItem('emaus_access');
+    elements.coverSection.style.display = 'none';
+    elements.notebookSection.classList.remove('active');
+    elements.loginOverlay.classList.remove('hidden');
+    elements.accessCode.value = '';
+    elements.loginError.textContent = '';
 }
 
 // ========================================
@@ -127,6 +143,7 @@ function initParticles() {
 function initEventListeners() {
     // Login
     elements.loginForm.addEventListener('submit', handleLogin);
+    elements.loginCancelBtn.addEventListener('click', handleCancelLogin);
 
     // Open Book
     elements.openBookBtn.addEventListener('click', openBook);
@@ -144,8 +161,9 @@ function initEventListeners() {
         if (e.target.value) searchByAuthor();
     });
 
-    // Back to Cover
+    // Back to Cover & Logout
     elements.backToCoverBtn.addEventListener('click', backToCover);
+    elements.logoutBtn.addEventListener('click', handleLogout);
 
     // Modal
     elements.modalClose.addEventListener('click', closeModal);
