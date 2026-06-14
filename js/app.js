@@ -1,7 +1,12 @@
 /**
  * Emaús Parejas Ibagué - Intenciones de Oración
- * Main Application Logic - Sin Turn.js
+ * Main Application Logic
  */
+
+// ========================================
+// Access Code
+// ========================================
+const ACCESS_CODE = 'Emaus2026Parejas';
 
 // ========================================
 // Global Variables
@@ -14,6 +19,12 @@ let pages = [];
 // DOM Elements
 // ========================================
 const elements = {
+    // Login
+    loginSection: document.getElementById('loginSection'),
+    loginForm: document.getElementById('loginForm'),
+    accessCode: document.getElementById('accessCode'),
+    loginError: document.getElementById('loginError'),
+
     // Cover
     coverSection: document.getElementById('coverSection'),
     openBookBtn: document.getElementById('openBookBtn'),
@@ -47,11 +58,49 @@ const elements = {
 // Initialize App
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
+    checkAccess();
     initParticles();
     initEventListeners();
     loadIntentions();
     updateFormDate();
 });
+
+// ========================================
+// Access Control
+// ========================================
+function checkAccess() {
+    const isAuthorized = sessionStorage.getItem('emaus_access');
+    if (isAuthorized === ACCESS_CODE) {
+        showMainContent();
+    }
+}
+
+function showMainContent() {
+    elements.loginSection.classList.add('hidden');
+    elements.coverSection.style.display = 'flex';
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const code = elements.accessCode.value.trim();
+
+    if (code === ACCESS_CODE) {
+        sessionStorage.setItem('emaus_access', code);
+        elements.loginError.textContent = '';
+        showMainContent();
+    } else {
+        elements.loginError.textContent = 'Código incorrecto. Intentá de nuevo.';
+        elements.accessCode.value = '';
+        elements.accessCode.focus();
+
+        // Shake animation
+        elements.loginCard = document.querySelector('.login-card');
+        elements.loginCard.style.animation = 'shake 0.5s ease';
+        setTimeout(() => {
+            elements.loginCard.style.animation = '';
+        }, 500);
+    }
+}
 
 // ========================================
 // Particles Background
@@ -76,6 +125,9 @@ function initParticles() {
 // Event Listeners
 // ========================================
 function initEventListeners() {
+    // Login
+    elements.loginForm.addEventListener('submit', handleLogin);
+
     // Open Book
     elements.openBookBtn.addEventListener('click', openBook);
 
