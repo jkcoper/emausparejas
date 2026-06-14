@@ -29,6 +29,7 @@ const elements = {
     // Cover
     coverSection: document.getElementById('coverSection'),
     openBookBtn: document.getElementById('openBookBtn'),
+    coverLogoutBtn: document.getElementById('coverLogoutBtn'),
 
     // Notebook
     notebookSection: document.getElementById('notebookSection'),
@@ -164,6 +165,7 @@ function initEventListeners() {
     // Back to Cover & Logout
     elements.backToCoverBtn.addEventListener('click', backToCover);
     elements.logoutBtn.addEventListener('click', handleLogout);
+    elements.coverLogoutBtn.addEventListener('click', handleLogout);
 
     // Modal
     elements.modalClose.addEventListener('click', closeModal);

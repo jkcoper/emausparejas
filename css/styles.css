@@ -924,6 +924,12 @@ body {
     color: white;
 }
 
+.cover-logout-btn {
+    margin-top: var(--space-lg);
+    font-size: 0.85rem;
+    padding: var(--space-sm) var(--space-lg);
+}
+
 /* ========================================
    Modal
    ======================================== */
