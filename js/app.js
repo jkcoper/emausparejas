@@ -181,7 +181,7 @@ function createCoverPage() {
         <div class="page-decoration bottom-left"><i class="fas fa-cross"></i></div>
         <h2 class="page-title">Intenciones de Oración</h2>
         <p class="page-subtitle">Emaús Parejas Ibagué</p>
-        <p style="font-family: var(--font-display); font-size: 1.2rem; margin-top: 2rem; color: var(--gold);">2025</p>
+        <p style="font-family: var(--font-display); font-size: 1.2rem; margin-top: 2rem; color: var(--gold);">2026</p>
     `;
     return page;
 }
