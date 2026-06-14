@@ -251,9 +251,9 @@ function initializeTurnJs() {
         height: elements.book.offsetHeight,
         autoCenter: true,
         display: 'single',
-        acceleration: true,
-        gradients: true,
-        elevation: 50,
+        acceleration: false,
+        gradients: false,
+        elevation: 0,
         when: {
             turned: function(event, page) {
                 currentPageIndex = page - 1;

@@ -493,25 +493,21 @@ body {
     padding: var(--space-xl);
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    position: relative;
+    z-index: 1;
 }
 
 .book {
     position: relative;
     width: 100%;
     aspect-ratio: 4/3;
-    background: linear-gradient(90deg,
-        var(--page-edge) 0%,
-        var(--cream-dark) 2%,
-        var(--page-bg) 5%,
-        var(--page-bg) 95%,
-        var(--cream-dark) 98%,
-        var(--page-edge) 100%
-    );
+    background: var(--page-bg);
     border-radius: 5px 20px 20px 5px;
     box-shadow:
         5px 5px 20px rgba(0, 0, 0, 0.2),
         inset 0 0 30px rgba(0, 0, 0, 0.05);
     transform-style: preserve-3d;
+    z-index: 1;
 }
 
 /* Page Styling */
@@ -528,10 +524,10 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    backface-visibility: hidden;
     border-radius: 5px 15px 15px 5px;
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.02);
     overflow: hidden;
+    z-index: 1;
 }
 
 .page::before {
@@ -645,6 +641,7 @@ body {
 .back-cover-page {
     background: linear-gradient(135deg, var(--navy) 0%, #0d1b2a 100%);
     color: white;
+    z-index: 2;
 }
 
 .back-cover-page .back-text {
@@ -653,6 +650,15 @@ body {
     color: var(--gold);
     text-align: center;
     line-height: 1.8;
+}
+
+/* Turn.js Overrides - Fix Transparency */
+.turn-page {
+    background: var(--page-bg) !important;
+}
+
+.turn-page-wrapper {
+    background: var(--page-bg) !important;
 }
 
 /* ========================================
